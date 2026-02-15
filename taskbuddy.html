@@ -1,106 +1,146 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>TaskBuddy</title>
+<meta charset="UTF-8">
+<title>TaskBuddy</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-        }
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+}
 
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
+.container {
+    width: 500px;
+    margin: 40px auto;
+}
 
-        input {
-            padding: 8px;
-            width: 70%;
-        }
+h1 {
+    color: #4CAF50;
+}
 
-        button {
-            padding: 8px 12px;
-            margin: 5px;
-            cursor: pointer;
-        }
+input {
+    padding: 6px;
+    width: 70%;
+}
 
-        li {
-            list-style: none;
-            margin: 10px 0;
-            display: flex;
-            justify-content: space-between;
-        }
+button {
+    padding: 6px 10px;
+    margin-left: 5px;
+    cursor: pointer;
+}
 
-        .completed {
-            text-decoration: line-through;
-            color: gray;
-        }
-    </style>
+.task {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.actions button {
+    margin-left: 5px;
+}
+
+.counter {
+    margin-top: 20px;
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
+
     <h1>TaskBuddy</h1>
 
     <input type="text" id="taskInput" placeholder="New Task">
-    <button onclick="addTask()">Add</button>
+    <button onclick="addTask()">Add Task</button>
 
-    <ul id="taskList"></ul>
+    <div id="taskList"></div>
 
-    <p>Total Tasks: <span id="total">0</span></p>
+    <div class="counter">
+        <p>Count: <span id="count">0</span></p>
+        <button onclick="increase()">Increase +</button>
+    </div>
+
 </div>
 
 <script>
-    let tasks = [];
 
-    function addTask() {
-        let input = document.getElementById("taskInput");
-        let text = input.value.trim();
+let tasks = [];
+let count = 0;
 
-        if (text === "") return;
+function addTask() {
+    let input = document.getElementById("taskInput");
+    let text = input.value.trim();
 
-        tasks.push({ text: text, completed: false });
-        input.value = "";
-        renderTasks();
-    }
+    if (text === "") return;
 
-    function renderTasks() {
-        let list = document.getElementById("taskList");
-        list.innerHTML = "";
+    tasks.push({
+        text: text,
+        completed: false
+    });
 
-        tasks.forEach((task, index) => {
-            let li = document.createElement("li");
+    input.value = "";
+    renderTasks();
+}
 
-            let span = document.createElement("span");
-            span.textContent = task.text;
-            if (task.completed) span.classList.add("completed");
+function renderTasks() {
+    let list = document.getElementById("taskList");
+    list.innerHTML = "";
 
-            span.onclick = () => {
-                task.completed = !task.completed;
-                renderTasks();
-            };
+    tasks.forEach((task, index) => {
 
-            let delBtn = document.createElement("button");
-            delBtn.textContent = "Delete";
-            delBtn.onclick = () => {
-                tasks.splice(index, 1);
-                renderTasks();
-            };
+        let div = document.createElement("div");
+        div.className = "task";
 
-            li.appendChild(span);
-            li.appendChild(delBtn);
-            list.appendChild(li);
-        });
+        let span = document.createElement("span");
+        span.textContent = task.text;
 
-        document.getElementById("total").textContent = tasks.length;
-    }
+        if (task.completed) {
+            span.classList.add("completed");
+        }
+
+        let actions = document.createElement("div");
+        actions.className = "actions";
+
+        let completeBtn = document.createElement("button");
+        completeBtn.textContent = "Complete";
+        completeBtn.onclick = () => {
+            task.completed = !task.completed;
+            renderTasks();
+        };
+
+        let deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.style.color = "red";
+        deleteBtn.onclick = () => {
+            tasks.splice(index, 1);
+            renderTasks();
+        };
+
+        actions.appendChild(completeBtn);
+        actions.appendChild(deleteBtn);
+
+        div.appendChild(span);
+        div.appendChild(actions);
+
+        list.appendChild(div);
+    });
+}
+
+function increase() {
+    count++;
+    document.getElementById("count").textContent = count;
+}
+
 </script>
 
 </body>
