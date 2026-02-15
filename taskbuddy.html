@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TaskBuddy</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        input {
+            padding: 8px;
+            width: 70%;
+        }
+
+        button {
+            padding: 8px 12px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        li {
+            list-style: none;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>TaskBuddy</h1>
+
+    <input type="text" id="taskInput" placeholder="New Task">
+    <button onclick="addTask()">Add</button>
+
+    <ul id="taskList"></ul>
+
+    <p>Total Tasks: <span id="total">0</span></p>
+</div>
+
+<script>
+    let tasks = [];
+
+    function addTask() {
+        let input = document.getElementById("taskInput");
+        let text = input.value.trim();
+
+        if (text === "") return;
+
+        tasks.push({ text: text, completed: false });
+        input.value = "";
+        renderTasks();
+    }
+
+    function renderTasks() {
+        let list = document.getElementById("taskList");
+        list.innerHTML = "";
+
+        tasks.forEach((task, index) => {
+            let li = document.createElement("li");
+
+            let span = document.createElement("span");
+            span.textContent = task.text;
+            if (task.completed) span.classList.add("completed");
+
+            span.onclick = () => {
+                task.completed = !task.completed;
+                renderTasks();
+            };
+
+            let delBtn = document.createElement("button");
+            delBtn.textContent = "Delete";
+            delBtn.onclick = () => {
+                tasks.splice(index, 1);
+                renderTasks();
+            };
+
+            li.appendChild(span);
+            li.appendChild(delBtn);
+            list.appendChild(li);
+        });
+
+        document.getElementById("total").textContent = tasks.length;
+    }
+</script>
+
+</body>
+</html>
